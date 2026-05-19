@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
+    <title>Unity WebGL Player | Blieverse Online</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="TemplateData/icon200.png">
+    <link rel="icon" type="image/png" sizes="200x200" href="TemplateData/icon200.png">
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+    </div>
+    <script>
+      window.addEventListener("load", function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("ServiceWorker.js");
+        }
+      });
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var warningBanner = document.querySelector("#unity-warning");
+
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      // --- �i���֨����� 2�j�۰���� Unity �� Version �������ê`�J URL �Ѽ� ---
+      var unityVersion = "0.1";
+      var buildUrl = "Build";
+      
+      // �۰ʦb Loader �����[�W�������]�p .js?v="0.2"�^
+      var loaderUrl = buildUrl + "/VirturalExhibition_Online.loader.js?v=" + encodeURIComponent(unityVersion);
+      var config = {
+        // �۰ʦb�Ҧ��֤߸귽�ɮ׫��[�W ?v=����
+        dataUrl: buildUrl + "/VirturalExhibition_Online.data?v=" + encodeURIComponent(unityVersion),
+        frameworkUrl: buildUrl + "/VirturalExhibition_Online.framework.js?v=" + encodeURIComponent(unityVersion),
+        codeUrl: buildUrl + "/VirturalExhibition_Online.wasm?v=" + encodeURIComponent(unityVersion),
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Blieverse Online",
+        productVersion: "0.1",
+        showBanner: unityShowBanner,
+      };
+
+      // --- �i�֤� WebGL Post-Processing �y�Z���u�ơj ---
+      // ���������]�p iPhone Retina �ù��^�W���ѪR�״�V�A���� GPU �L���o�S�A�ѨM 10 ���᭰�W�d�y
+      config.devicePixelRatio = Math.min(window.devicePixelRatio, 1.6); 
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        
+        // =======================================================================
+        // �i����ݮ֤߭ץ��j�j�����[���ئb����W�]�O���ù�����w��A����Q�������}�C��������
+        container.className = "unity-mobile";
+        loadingBar.style.position = "fixed";
+        // =======================================================================
+      }
+
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          // =======================================================================
+          // �i�N�쥻�� loadingBar.style.display = "none"; �קאּ�H�U�o��j
+          // ���J������A�������� Loading �e���q�������u�ޱ��P���v�A�O�ҵ�������B�����d�e���I
+          loadingBar.remove(); 
+          // =======================================================================
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
