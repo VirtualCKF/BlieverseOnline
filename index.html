@@ -13,6 +13,27 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="TemplateData/icon200.png">
     <link rel="icon" type="image/png" sizes="200x200" href="TemplateData/icon200.png">
+    <style>
+    /* 強制覆寫 Unity 在手機端生成的原生輸入欄位位置 */
+    input[type="text"], input[type="password"], textarea, .unity-mobile-input {
+        position: fixed !important;
+        bottom: auto !important;     /* 取消原本靠底部的設定 */
+        top: 50% !important;         /* 移到畫面垂直中間 */
+        left: 50% !important;        /* 移到畫面水平中間 */
+        transform: translate(-50%, -50%) !important; /* 精準置中對齊 */
+        
+        /* 以下可以微調預覽框的外觀（可選） */
+        width: 80% !important;       /* 讓寬度佔螢幕的 80%，避免太寬或太窄 */
+        max-width: 500px !important; 
+        z-index: 99999 !important;   /* 確保它絕對疊在 Unity 遊戲畫面上方 */
+        
+        /* 如果想讓它更好看，可以加上圓角和陰影 */
+        border: 2px solid #333 !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+        font-size: 18px !important;  /* 防止 iOS 點擊時畫面縮放，建議設 16px ~ 18px */
+    }
+</style>
   </head>
   <body>
     <div id="unity-container">
