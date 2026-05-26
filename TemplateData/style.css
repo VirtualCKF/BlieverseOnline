@@ -1,6 +1,6 @@
 body { padding: 0; margin: 0; background: #FF808E; }
 #unity-container { position: fixed; width: 100%; height: 100%; left: 0; top: 0; }
-#unity-canvas { width: 100%; height: 100%; background: #FF6577; }
+#unity-canvas { width: 100%; height: 100%; background: #FF808E; }
 
 /* =======================================================================
    【終極修正版】Loading 容器
