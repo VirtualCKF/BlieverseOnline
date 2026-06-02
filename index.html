@@ -98,23 +98,26 @@
         showBanner: unityShowBanner,
       };
 
-      // --- �i�֤� WebGL Post-Processing �y�Z���u�ơj ---
-      // ���������]�p iPhone Retina �ù��^�W���ѪR�״�V�A���� GPU �L���o�S�A�ѨM 10 ���᭰�W�d�y
-      config.devicePixelRatio = Math.min(window.devicePixelRatio, 1.6); 
+      // --- 【核心 WebGL Post-Processing 流暢度優化】 ---
+// 偵測是否為行動裝置（包含防範現代 iPad 偽裝成 Mac 的檢測）
+var isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+// 限制高階手機（如 iPhone Retina 螢幕）超高解析度渲染，防止 GPU 過熱發燙，解決 10 秒後降頻卡頓
+config.devicePixelRatio = Math.min(window.devicePixelRatio, 1.4); 
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        
-        // =======================================================================
-        // �i����ݮ֤߭ץ��j�j�����[���ئb����W�]�O���ù�����w��A����Q�������}�C��������
-        container.className = "unity-mobile";
-        loadingBar.style.position = "fixed";
-        // =======================================================================
-      }
+if (isMobileDevice) {
+  // Mobile device style: fill the whole browser client area with the game canvas:
+  var meta = document.createElement('meta');
+  meta.name = 'viewport';
+  meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+  document.getElementsByTagName('head')[0].appendChild(meta);
+  
+  // =======================================================================
+  // 【手機端核心修正】強制讓加載框在手機上也是全螢幕絕對定位，防止被網頁網址列推擠偏位
+  container.className = "unity-mobile";
+  loadingBar.style.position = "fixed";
+  // =======================================================================
+}
 
       loadingBar.style.display = "block";
 
