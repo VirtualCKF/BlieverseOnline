@@ -103,7 +103,26 @@
 var isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 // 限制高階手機（如 iPhone Retina 螢幕）超高解析度渲染，防止 GPU 過熱發燙，解決 10 秒後降頻卡頓
-config.devicePixelRatio = Math.min(window.devicePixelRatio, 0.5); 
+//config.devicePixelRatio = Math.min(window.devicePixelRatio, 0.5); 
+// 1. 先計算出我們要的 targetPixelRatio
+var targetPixelRatio = Math.min(window.devicePixelRatio || 0.5, 1);
+      // 2. 針對舊版 Android 平板或不支援動態 DPR 的設備，直接強制重設畫布的實體畫素
+if (/Android/i.test(navigator.userAgent)) {
+    // 取得瀏覽器當前的實際視窗寬高
+    var displayWidth = window.innerWidth;
+    var displayHeight = window.innerHeight;
+    
+    // 強制將 Canvas 的繪圖緩衝區（實體畫素）縮小
+    canvas.width = displayWidth * targetPixelRatio;
+    canvas.height = displayHeight * targetPixelRatio;
+    
+    // 但透過 CSS 讓它依然填滿整個螢幕
+    canvas.style.width = displayWidth + "px";
+    canvas.style.height = displayHeight + "px";
+}
+
+// 原本的 config 設定依然保留（雙重保險）
+config.devicePixelRatio = targetPixelRatio;
 
 if (isMobileDevice) {
   // Mobile device style: fill the whole browser client area with the game canvas:
