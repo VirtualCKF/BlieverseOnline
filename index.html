@@ -81,7 +81,7 @@
       }
 
       // --- �i���֨����� 2�j�۰���� Unity �� Version �������ê`�J URL �Ѽ� ---
-      var unityVersion = "0.52";
+      var unityVersion = "0.123";
       var buildUrl = "Build";
       
       // �۰ʦb Loader �����[�W�������]�p .js?v="0.2"�^
@@ -94,13 +94,13 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Blieverse Online",
-        productVersion: "0.52",
+        productVersion: "0.123",
         showBanner: unityShowBanner,
       };
 
       // --- �i�֤� WebGL Post-Processing �y�Z���u�ơj ---
       // ���������]�p iPhone Retina �ù��^�W���ѪR�״�V�A���� GPU �L���o�S�A�ѨM 10 ���᭰�W�d�y
-      config.devicePixelRatio = Math.min(window.devicePixelRatio, 1.0); 
+      config.devicePixelRatio = Math.min(window.devicePixelRatio, 1.2); 
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
