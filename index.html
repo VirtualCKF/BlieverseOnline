@@ -103,7 +103,7 @@
 var isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 // 限制高階手機（如 iPhone Retina 螢幕）超高解析度渲染，防止 GPU 過熱發燙，解決 10 秒後降頻卡頓
-config.devicePixelRatio = Math.min(window.devicePixelRatio, 1.4); 
+config.devicePixelRatio = Math.min(window.devicePixelRatio, 0.5); 
 
 if (isMobileDevice) {
   // Mobile device style: fill the whole browser client area with the game canvas:
